@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambulance Route Optimization System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">+</div>
+            <div>
+                <h2>MEDIROUTE</h2>
+                <span>Emergency Intelligence</span>
+            </div>
+        </div>
+
+        <div class="menu-label">MAIN MENU</div>
+
+        <nav>
+            <a href="#planner" class="nav-link active">⌖ &nbsp; Route Planner</a>
+            <a href="#map-section" class="nav-link">▤ &nbsp; Road Network</a>
+            <a href="#comparison" class="nav-link">⇄ &nbsp; Algorithm Analysis</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="system-status">
+                <span class="status-dot"></span>
+                System Operational
+            </div>
+            <p>B.Tech CSE Project</p>
+            <small>Ambulance Route Optimization</small>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1>Emergency Control Center</h1>
+                <p>Dynamic Ambulance Route Optimization System</p>
+            </div>
+
+            <div class="topbar-right">
+                <span class="live-indicator">● DEMO MODE</span>
+                <div class="profile">AR</div>
+            </div>
+        </header>
+
+        <!-- ROUTE PLANNER -->
+        <section id="planner" class="content-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Route Optimization</h2>
+                    <p>Configure emergency routing parameters</p>
+                </div>
+                <span class="section-tag">ROUTE ENGINE</span>
+            </div>
+
+            <div class="planner-card">
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="start">Starting Location</label>
+                        <select id="start">
+                            <option value="A">City Center</option>
+                            <option value="B">Railway Station</option>
+                            <option value="C">Bus Stand</option>
+                            <option value="D">Central Junction</option>
+                            <option value="G">Market Junction</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="end">Destination Hospital</label>
+                        <select id="end">
+                            <option value="E">North Care Hospital</option>
+                            <option value="F">Apollo Hospital</option>
+                            <option value="H">Government Hospital</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="algorithm">Search Algorithm</label>
+                        <select id="algorithm">
+                            <option value="astar">A* Search Algorithm</option>
+                            <option value="greedy">Greedy Best-First Search</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="traffic">Traffic Conditions</label>
+                        <select id="traffic">
+                            <option value="low">Low Traffic</option>
+                            <option value="medium" selected>Medium Traffic</option>
+                            <option value="high">Heavy Traffic</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="blocked-road">Road Condition</label>
+                        <select id="blocked-road">
+                            <option value="none">All Roads Open</option>
+                            <option value="AB">Block City Center – Railway</option>
+                            <option value="AD">Block City Center – Junction</option>
+                            <option value="BD">Block Railway – Junction</option>
+                            <option value="CD">Block Bus Stand – Junction</option>
+                            <option value="DE">Block Junction – North Hospital</option>
+                            <option value="DF">Block Junction – Apollo</option>
+                            <option value="DG">Block Junction – Market</option>
+                            <option value="GF">Block Market – Apollo</option>
+                            <option value="GH">Block Market – Government Hospital</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="button-row">
+                    <button id="calculate-btn" class="primary-btn">
+                        ⌖ &nbsp; Calculate Optimal Route
+                    </button>
+                    <button id="reset-btn" class="secondary-btn">
+                        ↻ &nbsp; Reset
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAP -->
+        <section id="map-section" class="content-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Road Network Visualization</h2>
+                    <p>Simulated roads, junctions and ambulance route</p>
+                </div>
+                <span class="section-tag">NETWORK MAP</span>
+            </div>
+
+            <div class="map-card">
+                <div class="map-toolbar">
+                    <div class="map-title">
+                        <span class="status-dot"></span>
+                        Sample Road Network
+                    </div>
+
+                    <div class="map-legend">
+                        <span><i class="legend-line green-line"></i> Low traffic</span>
+                        <span><i class="legend-line yellow-line"></i> Medium</span>
+                        <span><i class="legend-line red-line"></i> Heavy / Closed</span>
+                        <span><i class="legend-line blue-line"></i> Selected route</span>
+                    </div>
+                </div>
+
+                <div class="map-container">
+                    <canvas id="road-map"></canvas>
+                </div>
+
+                <div class="map-footer">
+                    <span>● Sample network nodes: 8</span>
+                    <span>● Sample road connections: 12</span>
+                    <span>Illustrative simulation – not a real navigation map</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section id="results" class="content-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Route Analysis</h2>
+                    <p>Optimization results and estimated performance</p>
+                </div>
+            </div>
+
+            <div class="results-grid">
+
+                <div class="result-card main-result">
+                    <div class="result-heading">
+                        <h3>Selected Route</h3>
+                        <span class="result-status">CALCULATED</span>
+                    </div>
+
+                    <div id="route-output" class="route-output">
+                        <p class="empty-message">
+                            Configure your route and click Calculate Optimal Route.
+                        </p>
+                    </div>
+
+                    <div class="simulation-controls">
+                        <button id="simulate-btn" class="primary-btn" disabled>
+                            ▶ Start Ambulance
+                        </button>
+                        <button id="pause-btn" class="secondary-btn" disabled>
+                            Pause
+                        </button>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3>Performance Metrics</h3>
+
+                    <div class="metric-row">
+                        <span>Distance</span>
+                        <strong id="metric-distance">-- km</strong>
+                    </div>
+
+                    <div class="metric-row">
+                        <span>Estimated Travel Time</span>
+                        <strong id="metric-time">-- min</strong>
+                    </div>
+
+                    <div class="metric-row">
+                        <span>Nodes Explored</span>
+                        <strong id="metric-nodes">--</strong>
+                    </div>
+
+                    <div class="metric-row">
+                        <span>Execution Time</span>
+                        <strong id="metric-execution">-- ms</strong>
+                    </div>
+
+                    <div class="metric-row">
+                        <span>Traffic Condition</span>
+                        <strong id="metric-traffic">--</strong>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ALGORITHM COMPARISON -->
+        <section id="comparison" class="content-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Algorithm Comparison</h2>
+                    <p>Compare A* and Greedy Best-First Search on the same network</p>
+                </div>
+                <button id="compare-btn" class="secondary-btn">
+                    ⇄ Compare Algorithms
+                </button>
+            </div>
+
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Performance</th>
+                            <th>A* Search</th>
+                            <th>Greedy Best-First</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Route</td>
+                            <td id="astar-route">--</td>
+                            <td id="greedy-route">--</td>
+                        </tr>
+                        <tr>
+                            <td>Distance</td>
+                            <td id="astar-distance">--</td>
+                            <td id="greedy-distance">--</td>
+                        </tr>
+                        <tr>
+                            <td>Estimated Time</td>
+                            <td id="astar-time">--</td>
+                            <td id="greedy-time">--</td>
+                        </tr>
+                        <tr>
+                            <td>Nodes Explored</td>
+                            <td id="astar-nodes">--</td>
+                            <td id="greedy-nodes">--</td>
+                        </tr>
+                        <tr>
+                            <td>Execution Time</td>
+                            <td id="astar-execution">--</td>
+                            <td id="greedy-execution">--</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PROJECT INFORMATION -->
+        <section class="content-section project-info">
+            <h2>About This Project</h2>
+            <p>
+                This system demonstrates dynamic ambulance route optimization
+                using A* and Greedy Best-First Search. It uses a sample road
+                network, simulated traffic costs and road closures to study
+                route selection and search performance.
+            </p>
+
+            <div class="info-grid">
+                <div>
+                    <h3>A* Search</h3>
+                    <p>Uses g(n) + h(n), combining the cost already traveled
+                    with the estimated cost to the destination.</p>
+                </div>
+                <div>
+                    <h3>Greedy Best-First Search</h3>
+                    <p>Uses h(n), prioritizing the node estimated to be
+                    closest to the destination.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            MEDIROUTE | B.Tech Computer Science Engineering Project
+            <br>
+            Educational simulation only – not for real emergency dispatch.
+        </footer>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
